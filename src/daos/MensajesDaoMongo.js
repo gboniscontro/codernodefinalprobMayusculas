@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { MONGO_URI } = require('./config/globals')
+const { MONGO_URI } = require('../config/globals')
 
 
 class ContenedorMensaje {
@@ -9,7 +9,7 @@ class ContenedorMensaje {
         mongoose.connect(uriClient)
             .then(db => console.log('conectados a la base de datos mensajes'))
             .catch(err => console.log(err))
-        this.Mensajes = require('./mensajes')
+        this.Mensajes = require('../mensajes')
 
     }
     async getAll() {
