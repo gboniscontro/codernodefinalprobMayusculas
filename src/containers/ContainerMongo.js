@@ -8,41 +8,62 @@
 const { MONGO_URI } = require('../config/globals')
 const ObjError = require('../objError')
 const mongoose = require('mongoose')
+const logger = require('../logger')
 
 class ContainerMongo {
   constructor(model) {
-    mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    }, () => console.log('Connected'))
+    mongoose.connect(
+      MONGO_URI,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+      () => console.log('Connected'),
+    );
 
     this.model = model;
   }
 
   async getAll() {
-    return await this.model.find()
+    return await this.model.find();
   }
   async getById(id) {
     if (!mongoose.Types.ObjectId.isValid(id)) return null;
-    
-    const item = await this.model.findById(id)
+
+    const item = await this.model.findById(id);
     //console.log(item)
-    return item
+    return item;
   }
 
   async save(data) {
-    return await this.model.create(data)
+    try {
+    return await this.model.create(data);
+    }
+    catch (err) {
+      logger.error(err);
+      throw new ObjError(500, `Error saving mongo model`,err);
+    }
   }
   async deleteById(id) {
     const deleted = await this.model.findOneAndDelete({ _id: id });
     return id;
-
   }
 
   async updateById(id, item) {
     const updated = await this.model.findOneAndUpdate({ _id: id }, item);
     return updated;
   }
+
+  async add(data) {
+    try {
+      const { insertedId } = await this.model.create(data);
+      return insertedId;
+    } catch (err) {
+      logger.error(err);
+      throw new ObjError(500, `Error adding mongo document to collection ${this.collectionName}`, err);
+    }
+  }
+
 }
 
 module.exports = ContainerMongo;

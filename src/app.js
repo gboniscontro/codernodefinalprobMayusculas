@@ -3,8 +3,8 @@ const logger = require('./logger');
 const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const productosRouter = require('./routes/productsRoutes');
-const carritoRouter = require('./routes/carritoRoutes');
+const productosRouter = require('./routes/productosRoutes');
+const carritoRouter = require('./routes/carritosRoutes');
 const defRoute = require('./routes/default');
 const webRoute = require('./routes/webRoutes');
 const random = require('./routes/random');
@@ -13,7 +13,7 @@ const { ContenedorMensaje } = require('./daos/MensajesDaoMongo');
 const Normal = require('./normal');
 const path = require('path');
 const { apiAuth, webAuth } = require('./middlewares/admin');
-const webPass = require('./routes/webPassport');
+//const webPass = require('./routes/webPassport');
 const { MODO } = require('./config/globals');
 const compression = require('compression');
 
@@ -51,11 +51,12 @@ app.use(
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use('/api/productos', apiAuth, productosRouter);
-app.use('/api/carrito', apiAuth, carritoRouter);
+//habia puesto un apiAuth para si no estaba autenticado no poder acceder a la api pero no funcionaba
+app.use('/api/productos', productosRouter);
+app.use('/api/carrito', carritoRouter);
 app.use('/api/randoms', random);
 
-app.use('/', webPass);
+//app.use('/', webPass);
 app.use('/', webRoute);
 
 module.exports = app;

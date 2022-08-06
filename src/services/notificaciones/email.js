@@ -13,8 +13,8 @@ transporter.verify(function (error, success) {
   }
 });
 
-export async function enviarEmail(correoDestino, asunto, cuerpo) {
-  logger.info('Enviando email con la notificación del nuevo pedido ...');
+ async function enviarEmail(correoDestino, asunto, cuerpo) {
+  logger.info('Enviando email  ...');
 
   const mailOptions = {
     from: 'Servidor NodeJS',
@@ -31,3 +31,4 @@ export async function enviarEmail(correoDestino, asunto, cuerpo) {
     logger.error(err);
   }
 }
+module.exports = {enviarEmail};

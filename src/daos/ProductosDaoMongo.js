@@ -1,5 +1,5 @@
 const ContainerMongo = require('../containers/ContainerMongo')
-const productModel = require('../models/productos')
+const productModel = require('../models/producto')
 const ObjError = require('../objError')
 class productDaoMongo extends ContainerMongo {
 	constructor() {
