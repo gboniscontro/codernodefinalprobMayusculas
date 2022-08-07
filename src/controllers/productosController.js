@@ -49,7 +49,7 @@ module.exports = {
 
     },
     delete: (request, response) => {
-        logger.info(`deleteById ${id}  Productos`)
+        logger.info(`deleteById ${request.params.id}  Productos`);
         productos.deleteById(request.params.id)
             .then((e) => response.status(200).json({ message: 'Producto borrado exitosamente' }))
             .catch((e) => response.status(404).json({ error: 'Error en borrado del producto' }))
