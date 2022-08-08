@@ -51,6 +51,7 @@ class ContainerMongo {
 
   async updateById(id, item) {
     const updated = await this.model.findOneAndUpdate({ _id: id }, item);
+     
     return updated;
   }
 

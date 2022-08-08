@@ -1,4 +1,5 @@
-const { response } = require('express');
+const logger = require('../logger');
+
 //const { carrito } = require('../models/carritoModel')
 const { carrito } = require('../daos/carritosDao');
 //const { carrito } = require('../daos/CarritosDaoFirestore')
@@ -27,6 +28,7 @@ module.exports = {
     try {
       let id = request.params.id;
       let arrProd = request.body;
+      logger.info('viene del body', arrProd);
       carrito.addProd(id, arrProd);
       return response.status(200).json({ carrito: arrProd, message: 'Producto agregado' });
     } catch (error) {
