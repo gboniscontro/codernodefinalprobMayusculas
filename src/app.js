@@ -18,8 +18,8 @@ const { MODO } = require('./config/globals');
 const compression = require('compression');
 
 const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+//const server = require('http').Server(app);
+//const io = require('socket.io')(server);
 
 const normal = new Normal();
 //const util = require('util')
@@ -67,5 +67,25 @@ app.use('/api/randoms', random);
 
 //app.use('/', webPass);
 app.use('/', webRoute);
+
+//agregamos apollo graphql
+const { ApolloServer } = require('apollo-server-express');
+const typeDefs = require('./graphql/typeDefs.js');
+const resolvers = require('./graphql/resolvers.js');
+
+//const  connectDB = require('./db.js');
+
+async function start() {
+  const apolloServer = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
+
+  await apolloServer.start();
+  // apolloServer.applyMiddleware({app: app})
+  apolloServer.applyMiddleware({ app });
+}
+
+start();
 
 module.exports = app;

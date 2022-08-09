@@ -1,5 +1,5 @@
 const ContainerMongo = require('../containers/ContainerMongo');
-const { productDaoMongo } = require('./productosDaoMongo');
+//const { productDaoMongo } = require('./productosDaoMongo');
 const ObjError = require('../objError');
 const logger = require('../logger');
 
