@@ -23,6 +23,15 @@ const io = require('socket.io')(server);
 
 const normal = new Normal();
 //const util = require('util')
+/*
+async () => {
+  logger.info('BORRO LA BASE DE DATOS PARA EMPEZAR DE CERO');
+  const db = await MongoStore.connect(config.MONGO_URI);
+  await db.dropDatabase(function (err, result) {
+    logger.error(err);
+  });
+};
+*/
 
 console.log(MODO);
 app.use(

@@ -66,15 +66,12 @@ describe('test de crear Productos y Carrito ', () => {
     const { data: dataget } = await axios.get(url + '/api/carrito/' + codCarrito + '/productos');
     //logger.info(JSON.stringify(dataget.dato.productos));
     //logger.info(JSON.stringify(addprod));
-    assert.strictEqual(JSON.stringify(addprod), JSON.stringify(dataget.dato.productos));
+    const straddprod = [
+      { _id: addprod[0], cant: 1 },
+      { _id: addprod[1], cant: 1 },
+    ];
+
+    assert.strictEqual(JSON.stringify(straddprod), JSON.stringify(dataget.dato.productos));
     //  logger.info(dataget);
   });
 });
-
-/*
-me puse a tratar de corregir unas cosas ahora que hice las clases de test me dio una falla en el agregar carrito
- no se q pasaba que los objetos me volvian loco para agregar los productos , 
- asi que hice el carrito de esta forma , un array de productos con solo el idstring , 
- y otro array con un numero con la cantidad , porque lamentablmente se me enquilombo manejarlo
-  todo como si fuera objeto el array de productos que estaba en el carrito y me fallaba a cada rato,
-   con esta implementacion estaria cumpliendo las consignas?*/

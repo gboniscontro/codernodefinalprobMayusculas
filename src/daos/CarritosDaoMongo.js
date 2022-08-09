@@ -21,36 +21,48 @@ class CarritoDaoMongo extends ContainerMongo {
   async addProd(id, arrProd) {
     try {
       //arrProd = JSON.parse(JSON.stringify(arrProd));
-      logger.info('Agrego productos al carrito carrito.addProd', arrProd.length, id);
+      logger.info('Agrego productos  al carrito de ID: ', id);
       // const producto = new productDaoMongo();
       const carrito = await this.getById(id);
+      if (carrito == null || carrito == undefined) throw new ObjError(500, 'Error el id de carrito ingresado no existe');
       for (let i = 0; i < arrProd.length; i++) {
-        //logger.info('Agrego productos =>', arrProd[i]);
-        const encontreProducto = carrito.productos.findIndex((x) => x.valueOf() === arrProd[i]);
-        //logger.info('dsp del indice');
-        if (encontreProducto < 0) {
-          //const prod = await producto.getById(arrProd[i]);
-          //logger.info('antes del push');
-          carrito.productos.push(arrProd[i]);
-          carrito.productosCant.push(1);
-        //  logger.info('dsp del push');
+      
+        let encontreProducto = -1;
+        if (carrito.productos ? carrito.productos.length > 0 : false) {
+      
+          encontreProducto = await carrito.productos.findIndex((x) => x?._id == arrProd[i]);
         } else {
-          carrito.productosCant[encontreProducto]++;
+          carrito.productos = [];
+        }
+      
+        if (encontreProducto < 0) {
+      
+          carrito.productos.push({ _id: arrProd[i], cant: 1 });
+      
+        } else {
+          carrito.productos[encontreProducto].cant++;
         }
       }
       await this.updateById(id, carrito);
-      //logger.info('salio bien el updatebyid');
+      
     } catch (e) {
+      logger.error(e);
       throw new ObjError(500, 'Error al agregar productos al carrito', e);
     }
   }
   async deleteByIdProd(id, idprod) {
-    const carrito = await this.getById(id);
-    const encontreProducto = carrito.productos.findIndex((x) => x.valueOf() === arrProd[i]);
+    try {
+      const carrito = await this.getById(id);
+      if (carrito == null || carrito == undefined) throw new ObjError(500, 'Error el id de carrito ingresado no existe');
+      const encontreProducto = carrito.productos.findIndex((x) => x?._id == idprod);
 
-    carrito.productos.splice(encontreProducto, 1);
-    carrito.productosCant.splice(encontreProducto, 1);
-    await carrito.save();
+      carrito.productos.splice(encontreProducto, 1);
+
+      await carrito.save();
+    } catch (e) {
+      logger.error(e);
+      throw new ObjError(500, 'Error al borrar productos al carrito', e);
+    }
   }
 }
 const carrito = new CarritoDaoMongo();

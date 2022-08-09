@@ -5,10 +5,10 @@
 // EL ARCHIVO .env VA EN EL ROOT DEL PROYECTO...
 // LA CONFIG SERIA (cambiando a la url que use cada uno):
 // MONGO_URI = 'mongodb+srv://test1:test1234@cluster0.30cad.mongodb.net/ecommerce?retryWrites=true&w=majority'
-const { MONGO_URI } = require('../config/globals')
-const ObjError = require('../objError')
-const mongoose = require('mongoose')
-const logger = require('../logger')
+const { MONGO_URI } = require('../config/globals');
+const ObjError = require('../objError');
+const mongoose = require('mongoose');
+const logger = require('../logger');
 
 class ContainerMongo {
   constructor(model) {
@@ -28,7 +28,7 @@ class ContainerMongo {
     return await this.model.find();
   }
   async getById(id) {
-    if (!mongoose.Types.ObjectId.isValid(id)) return null;
+    //if (!mongoose.Types.ObjectId.isValid(id)) return null;
 
     const item = await this.model.findById(id);
     //console.log(item)
@@ -37,11 +37,10 @@ class ContainerMongo {
 
   async save(data) {
     try {
-    return await this.model.create(data);
-    }
-    catch (err) {
+      return await this.model.create(data);
+    } catch (err) {
       logger.error(err);
-      throw new ObjError(500, `Error saving mongo model`,err);
+      throw new ObjError(500, `Error saving mongo model`, err);
     }
   }
   async deleteById(id) {
@@ -51,7 +50,6 @@ class ContainerMongo {
 
   async updateById(id, item) {
     const updated = await this.model.findOneAndUpdate({ _id: id }, item);
-     
     return updated;
   }
 
@@ -64,7 +62,6 @@ class ContainerMongo {
       throw new ObjError(500, `Error adding mongo document to collection ${this.collectionName}`, err);
     }
   }
-
 }
 
 module.exports = ContainerMongo;

@@ -1,16 +1,13 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const CarritoSchema = new mongoose.Schema({
-  timestamp: {
-    type: Number,
-    required: false,
-  },
-  productos: [    
-      {type: String}    
+  productos: [
+    {
+      _id: String,
+      cant: Number,
+    },
   ],
-  productosCant: [    
-      {type: Number}    
-  ],
+  timestamp: Number,
 });
 
-module.exports = mongoose.model('Carrito', CarritoSchema); 
+module.exports = mongoose.model('Carrito', CarritoSchema);
