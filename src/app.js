@@ -9,19 +9,26 @@ const defRoute = require('./routes/default');
 const webRoute = require('./routes/webRoutes');
 const random = require('./routes/random');
 
-const { ContenedorMensaje } = require('./daos/MensajesDaoMongo');
 const Normal = require('./normal');
 const path = require('path');
 const { apiAuth, webAuth } = require('./middlewares/admin');
 //const webPass = require('./routes/webPassport');
-const { MODO } = require('./config/globals');
+const { MODO,MONGO_URI } = require('./config/globals');
 const compression = require('compression');
 
 const app = express();
-//const server = require('http').Server(app);
-//const io = require('socket.io')(server);
 
-const normal = new Normal();
+const mongoose = require('mongoose');
+mongoose.connect(
+  MONGO_URI,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  () => console.log('Connected mongoose'),
+);
+
+
 //const util = require('util')
 /*
 async () => {
@@ -45,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     // store: MongoStore.create({ mongoUrl: config.mongoLocal.cnxStr }),
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    store: MongoStore.create({ mongoUrl: MONGO_URI }),
     secret: 'shhhhhhhhhhhhhhhhhhhhh',
     resave: false,
     saveUninitialized: false,
@@ -57,7 +64,7 @@ app.use(
 );
 
 //Engine
-app.set('view engine', 'hbs');
+app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 //habia puesto un apiAuth para si no estaba autenticado no poder acceder a la api pero no funcionaba
@@ -69,11 +76,12 @@ app.use('/api/randoms', random);
 app.use('/', webRoute);
 
 //agregamos apollo graphql
+//const  connectDB = require('./db.js');
+
 const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require('./graphql/typeDefs.js');
 const resolvers = require('./graphql/resolvers.js');
-
-//const  connectDB = require('./db.js');
+const { ContenedorMensaje } = require('../../ProyectoFinalNode2/src/contenedorsql');
 
 async function start() {
   const apolloServer = new ApolloServer({
@@ -82,10 +90,45 @@ async function start() {
   });
 
   await apolloServer.start();
-  // apolloServer.applyMiddleware({app: app})
+
   apolloServer.applyMiddleware({ app });
 }
 
 start();
 
-module.exports = app;
+module.exports = app
+//chat
+/*
+io.on('connection', async function (socket) {
+  const contmensj = new ContenedorMensaje();
+  console.log('un usuario se ha conectado');
+
+  console.log('emitimos chat');
+  let messages = await contmensj.getAll();
+
+  // console.log('messages', util.inspect(messages, false, 6, true))
+  console.log(JSON.stringify(messages).length);
+
+  const normes = normal.apply(messages);
+  // console.log('normes', util.inspect(normes, false, 6, true))
+  console.log(JSON.stringify(normes).length);
+
+  // socket.emit('messages', messages);
+  socket.emit('messages', normes);
+  socket.on('new-message', async function (data) {
+    await contmensj.save(data);
+    messages = await contmensj.getAll();
+    // console.log('new-message', util.inspect(messages, true, 6, true))
+    //    io.sockets.emit('messages', messages);
+    const normes = normal.apply(messages);
+    io.sockets.emit('messages', normes);
+  });
+});
+
+const PORT = process.env.PORT || 8080;
+
+const serv = server.listen(PORT, () => {
+  console.log('listening on port', serv.address().port);
+});
+serv.on('error', (err) => console.error('listening on port', err));
+*/

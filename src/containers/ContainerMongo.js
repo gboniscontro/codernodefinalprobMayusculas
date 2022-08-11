@@ -7,19 +7,12 @@
 // MONGO_URI = 'mongodb+srv://test1:test1234@cluster0.30cad.mongodb.net/ecommerce?retryWrites=true&w=majority'
 const { MONGO_URI } = require('../config/globals');
 const ObjError = require('../objError');
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
 const logger = require('../logger');
 
 class ContainerMongo {
   constructor(model) {
-    mongoose.connect(
-      MONGO_URI,
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      },
-      () => console.log('Connected'),
-    );
+
 
     this.model = model;
   }

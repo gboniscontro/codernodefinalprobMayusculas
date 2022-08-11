@@ -14,13 +14,15 @@ class UsersService {
     logger.info(`usersService.js - login`);
     try {
       const data = await this.userDao.getUserbyEmail(email);
+      if ( data==undefined || data ==null)  return false
       const usuario = new UserDto(data);
       if (!usuario.isValidPassword(password)) return false;
       
       return usuario.get();
     } catch (err) {
-      logger.error(`Error al loguearse: ${JSON.stringify(err)}`);
+      //logger.error(`Error al loguearse: ${JSON.stringify(err)}`);
       throw new ObjError(401, `Error al loguearse`, err);
+      return false
     }
   }
 

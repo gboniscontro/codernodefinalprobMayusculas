@@ -4,7 +4,6 @@ const app = require('../app.js');
 const logger = require('../logger');
 const config = require('../config/globals');
 const assert = require('assert');
-const { info } = require('console');
 
 const PORT = 8080; //config.PORT;
 const newProduct = [

@@ -1,49 +1,58 @@
-const app = require('./app.js')
-const logger = require('./logger')
-const config = require('./config/globals')
-const cluster = require('cluster')
-const os = require('os')
+const app = require('./app.js');
+const logger = require('./logger');
+const config = require('./config/globals');
+const cluster = require('cluster');
+const os = require('os');
 
-const PORT = config.PORT
-const modo = config.MODO
+const path = require('path');
 
-if (modo === "CLUSTER") {
+const PORT = config.PORT;
+const modo = config.MODO;
 
-    const cantidadDeCPUs = os.cpus().length
+/*****************************************************************************************/
+// PARTE WEB
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+const httpServer = createServer(app);
+const io = new Server(httpServer);
+const MySocket = require('./socket.js');
+const mySocket = new MySocket(io);
+mySocket.on();
+/*****************************************************************************************/
 
-    if (cluster.isPrimary) {/* MASTER */
-        console.log(`Cantidad de CPUS: ${cantidadDeCPUs}`)
-        console.log(`PID MASTER: ${process.pid}`)
-        console.log(`MODO: ${modo}`)
+if (modo === 'CLUSTER') {
+  const cantidadDeCPUs = os.cpus().length;
 
-        for (let i = 0; i < cantidadDeCPUs; i++) {
-            cluster.fork()
-        }
+  if (cluster.isPrimary) {
+    //master
 
-        cluster.on('exit', worker => {
-            console.log('Worker', worker.process.pid, 'died', new Date().toLocaleString())
-            cluster.fork()
-        })
-    } else { /* WORKERS */
+    console.log(`Cantidad de CPUS: ${cantidadDeCPUs}`);
+    console.log(`PID MASTER: ${process.pid}`);
+    console.log(`MODO: ${modo}`);
 
-        const server = app.listen(PORT, () => {
-            logger.info(`Http server listening on port ${server.address().port} - PID WORKER ${process.pid}`)
-        })
-
-        server.on("error", error => logger.error(`Server error ${error}`))
+    for (let i = 0; i < cantidadDeCPUs; i++) {
+      cluster.fork();
     }
 
+    cluster.on('exit', (worker) => {
+      console.log('Worker', worker.process.pid, 'died', new Date().toLocaleString());
+      cluster.fork();
+    });
+  } else {
+    //workers
+
+    const server = httpServer.listen(PORT, () => {
+      logger.info(`Http server listening on port ${server.address().port} - PID WORKER ${process.pid}`);
+    });
+
+    server.on('error', (error) => logger.error(`Server error ${error}`));
+  }
 } else {
+  const server = httpServer.listen(PORT, () => {
+    logger.info(`Http server listening on port ${server.address().port} - PID WORKER ${process.pid} - MODO ${modo}`);
+  });
 
-    const server = app.listen(PORT, () => {
-        logger.info(`Http server listening on port ${server.address().port} - PID WORKER ${process.pid} - MODO ${modo}`)
-    })
-
-    server.on("error", error => logger.error(`Server error ${error}`))
+  server.on('error', (error) => logger.error(`Server error ${error}`));
 }
 
-
-
-
-
-
+//para que ande los sockets hay que usar httpserver.llisten y no app.listen como se hacia antes

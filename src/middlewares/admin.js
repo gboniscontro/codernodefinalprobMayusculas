@@ -13,7 +13,7 @@ const isAdmin = (req, res , next) => {
 }
 
 const passAuth = (req, res, next) => {
-    if (req.user?._id) {
+    if (req.user?.username) {
         next()
     } else {
         res.redirect('/login')

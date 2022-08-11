@@ -6,15 +6,6 @@ const { createHash, isValidPassword } = require('../utils.js');
 const UsersService = require('./usersService');
 const userService = new UsersService();
 
-const mongoose = require('mongoose');
-mongoose.connect(
-  MONGO_URI,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  () => console.log('Connected users'),
-);
 
 const LocalStrategy = local.Strategy;
 
@@ -25,7 +16,7 @@ const initializePassport = () => {
       try {
         logger.info(`passportService.js - passport.use --> register`);
         try {
-          let user = await userService.getUsuario(email);
+          let user = await userService.getUsuario(username);
           if (user) return done(null, false);
         } catch (error) {
           logger.error(`passportService.js - passport.use --> register ${error}`);
@@ -55,10 +46,15 @@ const initializePassport = () => {
         logger.info(`passportService.js - passport.use --> login ${username}`);
 
         let user = await userService.login(username, password);
-        if (!user) return done(null, false, { message: 'Invalid password' });
+       // logger.info('invalid password o user not found', user);
+        if (!user) {
+         // logger.info('invalid password o user not found');
+          return done(null, false, { message: 'Invalid password' });
+        }
 
         return done(null, user);
       } catch (err) {
+       // logger.info('error not found');
         done(err);
       }
     }),
