@@ -1,3 +1,22 @@
+Rutas del proyecto
+
+estan en el .json adjunto
+usar el .env.sample para configurar el archivo .env
+
+para probar graphql ejecutar el localhost:8080/graphql
+
+para ejecutar el archivo de test
+npm run test
+
+para ejecutar el proyecto
+npm start
+
+las notificaciones de registro de nuevos usuarios se realizan mediante nodemailer
+(ingresar correctamente en el archivo .env la configuracion de su email de gmail para poder realizar el envio con la clave
+correspondiente para poder ejecutar desde esta aplicacion)
+
+
+
 #Ejecucion modo FORK Y CLUSTER
 
 node src/server.js --modo "CLUSTER"
@@ -6,7 +25,7 @@ node src/server.js --modo "FORK"
 
 //por defecto es modo fork
 
-node src/server.js 
+node src/server.js
 
 //pm2 ejecucion
 
@@ -26,8 +45,7 @@ pm2 delete 0
 
 pm2 start src/server.js -i 3
 
-
-//configuracion con nginx 
+//configuracion con nginx
 
 pm2 start src/server.js -- --port 8082
 
@@ -37,15 +55,10 @@ pm2 start src/server.js -- --port 8084
 
 pm2 start src/server.js -- --port 8085
 
-
-Ejecuto  nginx.exe
+Ejecuto nginx.exe
 
 con el archivo nginx.conf que adjunto
 
-./nginx -s reload 
+./nginx -s reload
 
-para hacer lo del desafio  
-
-
-
-
+para hacer lo del desafio
