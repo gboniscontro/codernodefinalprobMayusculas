@@ -1,5 +1,5 @@
 const { TIPO_PERSISTENCIA } = require('../config/globals');
-const carrito = require('../daos/carritosDao' + TIPO_PERSISTENCIA);
+const carrito = require('../daos/carritosDaoMongo'); // + TIPO_PERSISTENCIA
 /*
 switch (TIPO_PERSISTENCIA) {
   case 'Mongo':
