@@ -37,7 +37,7 @@
     "nodemon": "^1.4.1"
   },
   "scripts": {
-    "start": "nodemon src/server.js",
+    "start": "node src/server.js",
     "test": "mocha src/tests/app.test.js"
   }
 }
