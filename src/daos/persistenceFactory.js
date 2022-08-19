@@ -5,7 +5,7 @@ class PersistenceFactory {
   static getPersistence = async () => {
     switch (TIPO_PERSISTENCIA) {
       case 'Mongo':
-        carrito = require('../daos/carritosDaoMongo.js');
+        carrito = require('../daos/CarritosDaoMongo.js');
         return carrito;
       case 'Firestore':
         carrito = require('../daos/carritosDaoFirestore.js');
